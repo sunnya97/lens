@@ -59,7 +59,8 @@ func airdropCmd(a *appState) *cobra.Command {
 				return err
 			}
 			if dryRun {
-				var dropTotal float64
+				// var dropTotal sdk.Int
+				dropTotal := sdk.ZeroInt()
 				var dropAddress int64
 				for _, v := range airdrop {
 
@@ -67,11 +68,11 @@ func airdropCmd(a *appState) *cobra.Command {
 					if err != nil {
 						return err
 					}
-					dropTotal += float64(v.Amount)
+					dropTotal = dropTotal.Add(v.Amount)
 					dropAddress++
 
 				}
-				fmt.Fprintf(cmd.OutOrStdout(), "Airdrop total: %f %s\n", dropTotal, denom)
+				fmt.Fprintf(cmd.OutOrStdout(), "Airdrop total: %s %s\n", dropTotal.String(), denom)
 				fmt.Fprintf(cmd.OutOrStdout(), "Airdrop address count: %d\n", dropAddress)
 				return nil
 			}
@@ -92,7 +93,7 @@ func airdropCmd(a *appState) *cobra.Command {
 				if err != nil {
 					return err
 				}
-				toSendCoin := sdk.NewCoin(denom, sdk.NewInt(int64(v.Amount)))
+				toSendCoin := sdk.NewCoin(denom, v.Amount)
 				toSend := sdk.NewCoins(toSendCoin)
 				amount = amount.Add(toSendCoin)
 				multiMsg.Outputs = append(multiMsg.Outputs, banktypes.Output{cl.MustEncodeAccAddr(to), toSend})
@@ -143,6 +144,6 @@ func airdropCmd(a *appState) *cobra.Command {
 type airdropFile []airdropItem
 
 type airdropItem struct {
-	Address string `json:"address"`
-	Amount  uint64 `json:"amount"`
+	Address string  `json:"address"`
+	Amount  sdk.Int `json:"amount"`
 }

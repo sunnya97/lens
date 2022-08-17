@@ -1,0 +1,9 @@
+make --dry-run --always-make --keep-going --print-directory
+fatal: No names found, cannot describe anything.
+
+make: Entering directory `/Users/sunnya97/dev/sunnya97/lens'
+go test -mod=readonly -race ./...
+echo "Installing Lens"
+go install -mod readonly -ldflags '-X github.com/strangelove-ventures/lens/cmd.Version= -X github.com/strangelove-ventures/lens/cmd.Commit=5f45b069a1f6392823e4b2e677d66fc4ff6c193a ' ./...
+make: Leaving directory `/Users/sunnya97/dev/sunnya97/lens'
+ 
